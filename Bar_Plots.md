@@ -1,15 +1,11 @@
----
-title: "Bar Charts"
-author: "Kamila Kolpashnikova"  
-date: "`r format(Sys.Date())`"
-output:  
-      html_document:  
-        keep_md: true 
----
+# Bar Charts
+Kamila Kolpashnikova  
+`r format(Sys.Date())`  
 
 For this demostration, I am going to use a dataset derived from the Canadian GSS. The observations report coefficients for the Oaxaca-Blinder decomposition models.
 
-```{r}
+
+```r
 library(downloader) 
 url <- "https://raw.githubusercontent.com/Kolpashnikova/R-codes/master/for%20r%20decomposition.csv"
 filename <- basename(url)
@@ -19,16 +15,20 @@ decomposition <- read.csv(filename, header = T)
 
 Let's try out a bar plot from the ggplot library and plot the testing framworks and their respective explanatory powers.
 
-```{r, warning=F}
+
+```r
 colnames(decomposition)[1]<-"Testing.Variable"
 library(ggplot2)
 ggplot(decomposition, aes(x = Testing.Variable, y = Can.Cooking, fill=Can.Cooking)) + 
     geom_bar(stat = 'identity', position = 'stack') 
 ```
+
+![](Bar_Plots_files/figure-html/unnamed-chunk-2-1.png) 
  
 Right now all of the testing variables are together in one bundle. Since I want to know which framework each of the testing variables refer to, I create a new variable with the testing frameworks and bind it with the original table. I call the new resulting table `ddata`.
 
-```{r, warning=F}
+
+```r
 Framework<-c("Relative.Resources", "Time.Availability", 
              "Time.Availability", "Time.Availability", "Time.Availability", 
              "Time.Availability", "Autonomy", "Autonomy", "Autonomy", 
@@ -40,20 +40,40 @@ ddata<-cbind(decomposition,Framework)
 
 Now that I have all the needed components, I can try and divide my bar charts by fraeworks.
 
-```{r, warning=F}
+
+```r
 ddata$Testing.Variable <- as.factor(ddata$Testing.Variable) 
 levels(ddata$Testing.Variable)
+```
 
+```
+##  [1] "Age"                    "Children"              
+##  [3] "EduIn Years"            "Female employment"     
+##  [5] "Full Time"              "HhldSize"              
+##  [7] "Income Transfer"        "Leisure"               
+##  [9] "Leisure Men"            "Leisure Women"         
+## [11] "Marriage rate per 1000" "Other"                 
+## [13] "Own Home"               "Paid Work"             
+## [15] "Part Time"              "Personal Income"       
+## [17] "Personal Income Alone"  "Quebec"                
+## [19] "Under5"                 "Unempoyment"           
+## [21] "Weekday"                "Year"
+```
+
+```r
 ggplot(ddata, aes(x = Testing.Variable, y = Can.Cooking, fill=Can.Cooking), 
     na.rm=T) + 
     geom_bar(stat = "identity", position = "dodge", na.rm=T) + 
     facet_grid(~ Framework) + scale_x_discrete(breaks = NULL)
 ```
 
+![](Bar_Plots_files/figure-html/unnamed-chunk-4-1.png) 
+
 Well, first I want to get rid of the x label since it doesn't really help.
 
 
-```{r, warning=F}
+
+```r
 ggplot(ddata, aes(x = Testing.Variable, y = Can.Cooking, fill=Can.Cooking), 
        na.rm=T) + 
     geom_bar(stat = "identity", position = "dodge", na.rm=T) + 
@@ -62,9 +82,12 @@ ggplot(ddata, aes(x = Testing.Variable, y = Can.Cooking, fill=Can.Cooking),
           axis.title.x = element_blank())
 ```
 
+![](Bar_Plots_files/figure-html/unnamed-chunk-5-1.png) 
+
 Now I have a column 'NA' for the variables which are not in any frameworks. I would want to change my dataset a bit in a way so that I could use only the data for the framework.
 
-```{r, warning=F}
+
+```r
 ddata1<-ddata[1:16,]
 ggplot(ddata1, aes(x = Testing.Variable, y = Can.Cooking, fill=Can.Cooking), 
        na.rm=T) + 
@@ -75,9 +98,12 @@ ggplot(ddata1, aes(x = Testing.Variable, y = Can.Cooking, fill=Can.Cooking),
     ylab("% Explained in Logged Cooking Time")
 ```
 
+![](Bar_Plots_files/figure-html/unnamed-chunk-6-1.png) 
+
 I notice that the names for frameworks are too long and that is why I decide to use abbreviations for them but first I need to create a separate variable and bind them together with the dataset.
 
-```{r, warning=F}
+
+```r
 F<-c("1. RR", "2. TA", "2. TA", "2. TA", "2. TA", "2. TA", "3. A",  
      "3. A", "3. A", "3. A", "3. A", "4. PI", "5. GP", "5. GP", "5. GP",
      "5. GP")
@@ -88,7 +114,8 @@ Now we can plot:
 
 ### Explained Time Spent on Cooking by Canadians (let's call it p1):
 
-```{r, warning=F}
+
+```r
 p1<-ggplot(ddata1, aes(x = Testing.Variable, y = Can.Cooking, fill=Can.Cooking), 
        na.rm=T) +
     geom_bar(stat = "identity", position = "dodge", na.rm=T) + 
@@ -101,7 +128,8 @@ p1<-ggplot(ddata1, aes(x = Testing.Variable, y = Can.Cooking, fill=Can.Cooking),
 Let's create other plots for immigrants and Canadians by each domestic task ( plots p2-p8)
 
 
-```{r, warning=F}
+
+```r
 p2<-ggplot(ddata1, aes(x = Testing.Variable, y = Imm.Cooking, fill=Imm.Cooking), 
        na.rm=T) +
     geom_bar(stat = "identity", position = "dodge", na.rm=T) + 
@@ -160,54 +188,11 @@ p8<-ggplot(ddata1, aes(x = Testing.Variable, y = Imm.Maintenance, fill=Imm.Maint
 ```
 
 To plot multiple plots we can borrow one wonderful function `multiplot` and build our plots using that. You will find it in the codes folder `multiplot.R`. You have to run it to make it appear in your global environment.
-```{r, echo=FALSE}
-# Multiple plot function
-#
-# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
-# - cols:   Number of columns in layout
-# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
-#
-# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
-# then plot 1 will go in the upper left, 2 will go in the upper right, and
-# 3 will go all the way across the bottom.
-#
-multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-    library(grid)
-    
-    # Make a list from the ... arguments and plotlist
-    plots <- c(list(...), plotlist)
-    
-    numPlots = length(plots)
-    
-    # If layout is NULL, then use 'cols' to determine layout
-    if (is.null(layout)) {
-        # Make the panel
-        # ncol: Number of columns of plots
-        # nrow: Number of rows needed, calculated from # of cols
-        layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
-                         ncol = cols, nrow = ceiling(numPlots/cols))
-    }
-    
-    if (numPlots==1) {
-        print(plots[[1]])
-        
-    } else {
-        # Set up the page
-        grid.newpage()
-        pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
-        
-        # Make each plot, in the correct location
-        for (i in 1:numPlots) {
-            # Get the i,j matrix positions of the regions that contain this subplot
-            matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
-            
-            print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
-                                            layout.pos.col = matchidx$col))
-        }
-    }
-}
-```
 
-```{r, warning=F}
+
+
+```r
 multiplot(p1, p2, p3, p4, p5, p6, p7, p8, layout=matrix(c(1,2,3,4,5,6,7,8), nrow=4, byrow=TRUE))
 ```
+
+![](Bar_Plots_files/figure-html/unnamed-chunk-11-1.png) 
