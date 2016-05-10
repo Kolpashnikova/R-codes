@@ -1,6 +1,5 @@
 # Bar Charts
 Kamila Kolpashnikova  
-`r format(Sys.Date())`  
 
 For this demostration, I am going to use a dataset derived from the Canadian GSS. The observations report coefficients for the Oaxaca-Blinder decomposition models.
 
