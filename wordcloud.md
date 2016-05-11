@@ -43,3 +43,31 @@ wordcloud(myCorpus, scale=c(3,.2), min.freq=30, max.words=100, random.order=FALS
 
 ![](wordcloud_files/figure-html/unnamed-chunk-3-1.png) 
 
+
+
+Or let's create another one on Pride and Prejudice.
+
+```r
+library(NLP)
+library(RColorBrewer)
+library(tm)
+library(wordcloud)
+library(memoise)
+
+library(downloader) 
+url <-"http://www.gutenberg.org/cache/epub/1342/pg1342.txt"
+filename <- basename(url)
+download(url, destfile=filename)
+pandp<-readLines(filename, encoding = "UTF-8")
+
+myCorpus <- Corpus(VectorSource(pandp))
+myCorpus <- tm_map(myCorpus, content_transformer(tolower))
+myCorpus <- tm_map(myCorpus, removePunctuation)
+myCorpus <- tm_map(myCorpus, removeNumbers)
+myCorpus <- tm_map(myCorpus, removeWords,
+                   c(stopwords("SMART"), "to", "and", "but"))
+wordcloud(myCorpus, scale=c(3,.2), min.freq=30, max.words=100, random.order=FALSE,
+          rot.per=0.35, use.r.layout=FALSE, colors=brewer.pal(8, "Dark2"))
+```
+
+![](wordcloud_files/figure-html/unnamed-chunk-4-1.png) 
