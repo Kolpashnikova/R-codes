@@ -13,3 +13,7 @@ This file presents an easy code for making your own word cloud.
 ## [Plotting Simulation](https://github.com/Kolpashnikova/R-codes/blob/master/plotting_simulations.md)
 
 Here is an easy way to plot your simulations.
+
+## [3D Pie Charts](https://github.com/Kolpashnikova/R-codes/blob/master/3DPlots.md)
+
+Here you will find a tutorial on how to make 3D pie charts in R.
