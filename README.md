@@ -17,3 +17,7 @@ Here is an easy way to plot your simulations.
 ## [3D Pie Charts](https://github.com/Kolpashnikova/R-codes/blob/master/3DPlots.md)
 
 Here you will find a tutorial on how to make 3D pie charts in R.
+
+## [Multiple QQ Plots](https://github.com/Kolpashnikova/R-codes/blob/master/qqplots.md)
+
+This is a short tutorial on how to make qqplots in R for the normality check.
