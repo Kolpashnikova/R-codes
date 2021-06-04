@@ -1,12 +1,9 @@
 # R-codes
----
 
 # What is it
----
 This is a repo storing collections of visualizations in R. 
 
 # Contents
----
 Some files to check out:
 
 ## [Bar Plots](https://github.com/Kolpashnikova/R-codes/blob/master/Bar_Plots.md) 
